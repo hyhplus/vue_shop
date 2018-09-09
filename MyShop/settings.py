@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # Application definition
 
@@ -41,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.users.apps.UsersConfig',
+    'apps.goods',
+    'apps.trade',
+    'apps.user_operation',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +90,7 @@ DATABASES = {
         'PORT':  3306,
         'USER': 'root',
         'PASSWORD': '123456',
-        #'OPTIONS': {'init_command': 'SET storage_engine=INNODB;'}
+        'OPTIONS': {'init_command': 'SET default_storage_engine=INNODB;'}
     }
 }
 
