@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Evan'
+
+
 import sys
 import os
 
 
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(pwd+"../")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MxShop.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MyShop.settings")
+
 
 import django
 django.setup()
 
-from goods.models import Goods, GoodsCategory, GoodsImage
 
+from goods.models import Goods, GoodsCategory, GoodsImage
 from db_tools.data.product_data import row_data
+
 
 for goods_detail in row_data:
     goods = Goods()
@@ -26,6 +30,7 @@ for goods_detail in row_data:
 
     category_name = goods_detail["categorys"][-1]
     category = GoodsCategory.objects.filter(name=category_name)
+
     if category:
         goods.category = category[0]
     goods.save()

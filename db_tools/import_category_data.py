@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Evan'
 
+
 # 独立使用django的model
 import sys
 import os
