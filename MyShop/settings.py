@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'xadmin',
     'crispy_forms',
+    'rest_framework',
 
     'DjangoUeditor',
     'users.apps.UsersConfig',
