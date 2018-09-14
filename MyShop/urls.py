@@ -24,7 +24,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'goods', GoodsListViewSet)
+router.register(r'goods', GoodsListViewSet)     # 配置goods的url路由
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,

@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from .models import Goods
+from goods.models import Goods
 from rest_framework.views import APIView
-from .serializers import GoodsSerializer
+from goods.serializers import GoodsSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
-# django rest framework:  DRF
+from django_filters.rest_framework import DjangoFilterBackend
+from goods.filters import GoodsFilter
 
 """
+# django rest framework called by `DRF` later
 Web browsable API
 Serialization
 CVA
@@ -45,7 +47,7 @@ class GoodsPagination(PageNumberPagination):
 
 class GoodsListView(generics.ListAPIView):
     """
-    商品列表页
+    商品列表页 ListAPIView  -->  test
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
@@ -60,3 +62,16 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = GoodsFilter
+
+    # filter_backends = (DjangoFilterBackend,)
+    #filter_fields = ('name', 'shop_price')
+
+    # def get_queryset(self):
+    #     queryset = Goods.objects.all()
+    #     price_min = self.request.query_params.get("price_min", 0)
+    #     if price_min:
+    #         queryset = queryset.filter(shop_price__gt=int(price_min))
+    #     return queryset
