@@ -19,8 +19,16 @@ from django.conf.urls import include, url
 import xadmin
 from django.views.static import serve
 from MyShop.settings import MEDIA_ROOT
-from goods.views import GoodsListView
+from goods.views import GoodsListViewSet
 from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'goods', GoodsListViewSet)
+
+# goods_list = GoodsListViewSet.as_view({
+#     'get': list,
+# })
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -34,8 +42,10 @@ urlpatterns = [
     url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
 
-    # 商品列表页
-    path('goods/', GoodsListView.as_view(), name="goods-list"),
+    # # 商品列表页
+    # path('goods/', goods_list.as_view(), name="goods-list"),
+
+    url(r'^', include(router.urls)),
 
     # DRF自动文档
     url(r'docs/', include_docs_urls(title="drf电商系统")),
