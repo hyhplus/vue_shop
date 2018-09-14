@@ -12,6 +12,7 @@ from rest_framework.pagination import PageNumberPagination
 Web browsable API
 Serialization
 CVA
+
 pip install coreapi
 pip install django-guardian
 """
