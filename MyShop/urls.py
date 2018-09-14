@@ -34,7 +34,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
-    # drf 登录
+    # drf 后台登录
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # 处理图片显示的url,使用Django自带serve,
