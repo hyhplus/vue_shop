@@ -4,10 +4,11 @@ from rest_framework.views import APIView
 from goods.serializers import GoodsSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics, filters
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from goods.filters import GoodsFilter
+# from django_filters import rest_framework as filters
 
 """
 # django rest framework called by `DRF` later
@@ -35,7 +36,7 @@ pip install django-guardian
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class GoodsPagination(PageNumberPagination):
+class GoodsPagination(LimitOffsetPagination):
     """
     商品列表分页
     """
@@ -58,13 +59,16 @@ from rest_framework import mixins, viewsets
 class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     商品列表 ViewSet
+    包括了分页，搜索，过滤，排序
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
 
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter) # 模糊查询，排序
     filter_class = GoodsFilter
+    search_fields = ('name', 'goods_brief', 'goods_desc')
+    ordering_fields = ('sold_num', 'add_time')
 
     # filter_backends = (DjangoFilterBackend,)
     #filter_fields = ('name', 'shop_price')
