@@ -38,13 +38,13 @@ pip install django-guardian
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class GoodsPagination(LimitOffsetPagination):
+class GoodsPagination(PageNumberPagination):
     """
     商品列表分页
     """
-    # page_size = 10
-    # page_size_query_param = 'page_size'
-    page_query_param = 'p'
+    page_size = 12
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
     max_page_size = 100
 
 
@@ -70,7 +70,7 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
-    ordering_fields = ('sold_num', 'add_time')
+    ordering_fields = ('sold_num', 'shop_price')
 
     # filter_backends = (DjangoFilterBackend,)
     # filter_fields = ('name', 'shop_price')
