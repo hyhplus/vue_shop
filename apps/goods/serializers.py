@@ -19,11 +19,28 @@ from .models import Goods, GoodsCategory
 # ModelSerializer方式
 """
 goods的外键category --> 直接嵌套展示category表中的字段
+通过嵌套的方式实现序列化
 """
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer3(serializers.ModelSerializer):
     class Meta:
         model = GoodsCategory
         fields = '__all__'
+
+class CategorySerializer2(serializers.ModelSerializer):
+    sub_cat = CategorySerializer3(many=True)
+    class Meta:
+        model = GoodsCategory
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+    """
+    通过related_name的sub_cat调用
+    """
+    sub_cat = CategorySerializer2(many=True)
+    class Meta:
+        model = GoodsCategory
+        fields = '__all__'
+
 
 class GoodsSerializer(serializers.ModelSerializer):
     """

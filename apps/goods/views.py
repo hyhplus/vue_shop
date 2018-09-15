@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from goods.models import Goods
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
-from goods.serializers import GoodsSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics, filters
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
-from django_filters.rest_framework import DjangoFilterBackend
+
 from goods.filters import GoodsFilter
-# from django_filters import rest_framework as filters
+from goods.serializers import GoodsSerializer, CategorySerializer
+from goods.models import Goods
+from goods.models import GoodsCategory
+
 
 """
 # django rest framework called by `DRF` later
@@ -40,8 +42,8 @@ class GoodsPagination(LimitOffsetPagination):
     """
     商品列表分页
     """
-    page_size = 10
-    page_size_query_param = 'page_size'
+    # page_size = 10
+    # page_size_query_param = 'page_size'
     page_query_param = 'p'
     max_page_size = 100
 
@@ -65,13 +67,13 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
 
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter) # 模糊查询，排序
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('sold_num', 'add_time')
 
     # filter_backends = (DjangoFilterBackend,)
-    #filter_fields = ('name', 'shop_price')
+    # filter_fields = ('name', 'shop_price')
 
     # def get_queryset(self):
     #     queryset = Goods.objects.all()
@@ -79,3 +81,14 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     #     if price_min:
     #         queryset = queryset.filter(shop_price__gt=int(price_min))
     #     return queryset
+
+
+class CategoryViewSet(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
+    """
+    list:
+        商品分类列表数据
+    """
+    queryset = GoodsCategory.objects.filter(category_type=1)
+    serializer_class = CategorySerializer
