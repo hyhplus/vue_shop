@@ -44,31 +44,33 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'xadmin',
-    'crispy_forms',
+    'crispy_forms',             # rest_framework相关app
     'rest_framework',
-    'django_filters',
+    'django_filters',           # 过滤器配置
 
     'DjangoUeditor',
     'users.apps.UsersConfig',
     'goods.apps.GoodsConfig',
     'trade.apps.TradeConfig',
     'user_operation.apps.UserOperationConfig',
-    'corsheaders',
+
+    'corsheaders',              # 设置服务器跨域的配置
+    'rest_framework.authtoken', # 登录认证
 
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',                    # 跨域中间件配置
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True    # 设置允许跨域
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:3000'
 )
@@ -162,5 +164,25 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 5,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 12,
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+
+    # 登录验证配置
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #jwt的认证方式
+    )
+}
+
+# 设置用户名，邮箱和手机号码均可以登录系统
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
+
+# jwt相关的设置
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7), # jwt过期时间
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }

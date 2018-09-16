@@ -21,11 +21,15 @@ from django.views.static import serve
 from MyShop.settings import MEDIA_ROOT
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as token_views
+from rest_framework_jwt.views import obtain_jwt_token
+
 from goods.views import GoodsListViewSet, CategoryViewSet
+
 
 router = DefaultRouter()
 router.register(r'goods', GoodsListViewSet, base_name="goods")     # 配置goods的url路由
-router.register(r'categorys', CategoryViewSet, base_name="categorys")
+router.register(r'category', CategoryViewSet, base_name="categorys")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
@@ -50,4 +54,10 @@ urlpatterns = [
 
     # DRF自动文档
     url(r'docs/', include_docs_urls(title="drf电商系统")),
+
+    # 登录注册验证
+    url(r'^api-token-auth/', token_views.obtain_auth_token),
+
+    # jwt的token认证
+    url(r'^login/', obtain_jwt_token),
 ]
