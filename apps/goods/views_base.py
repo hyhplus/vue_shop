@@ -10,9 +10,8 @@ class GoodsListView(View):
     def get(self, request):
         """
         通过django的view实现商品列表页
-
         :param request:
-        :return:
+        :return JsonResponse(json_data, safe=False):
         """
 
         # json_list = []

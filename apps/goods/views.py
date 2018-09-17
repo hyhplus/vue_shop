@@ -64,7 +64,12 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     商品列表 ViewSet
     包括了分页，搜索，过滤，排序
     """
-    queryset = Goods.objects.all()
+    '''
+    # queryset = Goods.objects.all() 不设置排序会报下面的错误:
+    UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'goods.models.Goods'> QuerySet
+    '''
+    # queryset = Goods.objects.get_queryset().order_by('id')
+    queryset = Goods.objects.all().order_by('id')
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
 
