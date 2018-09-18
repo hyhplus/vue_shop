@@ -21,9 +21,10 @@ class YunPian(object):
 
         response = requests.post(self.single_send_url, data=params)
         re_dict = json.loads(response.text)
-        print(re_dict)
+        # print(re_dict)
+        return re_dict
 
 
-if __name__ == "__main__":
-    yun_pian = YunPian("c034bd24302cd03158e0e35bed50adf1")
-    yun_pian.send_sms("2018", "153****4026")
+# if __name__ == "__main__":
+#     yun_pian = YunPian("c034bd24302cd03158e0e35bed50adf1")
+#     yun_pian.send_sms("2018", "153****4026")

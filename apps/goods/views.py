@@ -59,7 +59,7 @@ class GoodsListView(generics.ListAPIView):
 
 
 from rest_framework import mixins, viewsets
-class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class GoodsAllViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     商品列表 ViewSet
     包括了分页，搜索，过滤，排序

@@ -24,12 +24,18 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as token_views
 from rest_framework_jwt.views import obtain_jwt_token
 
-from goods.views import GoodsListViewSet, CategoryViewSet
-
+from goods.views import GoodsAllViewSet
+from goods.views import CategoryViewSet
+from users.views import SmsCodeViewSet
 
 router = DefaultRouter()
-router.register(r'goods', GoodsListViewSet, base_name="goods")     # 配置goods的url路由
+
+# 配置商品列表的路由
+router.register(r'goods', GoodsAllViewSet, base_name="goods")
+# 配置商品分类的路由
 router.register(r'category', CategoryViewSet, base_name="categorys")
+# 配置验证码的路由
+router.register(r'codes', SmsCodeViewSet, base_name="codes")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
