@@ -27,15 +27,19 @@ from rest_framework_jwt.views import obtain_jwt_token
 from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from users.views import SmsCodeViewSet
+from users.views import UserViewSet
 
 router = DefaultRouter()
 
 # 配置商品列表的路由
 router.register(r'goods', GoodsAllViewSet, base_name="goods")
 # 配置商品分类的路由
-router.register(r'category', CategoryViewSet, base_name="categorys")
+router.register(r'category', CategoryViewSet, base_name="category")
 # 配置验证码的路由
-router.register(r'codes', SmsCodeViewSet, base_name="codes")
+router.register(r'code', SmsCodeViewSet, base_name="code")
+
+# 配置用户登录路由
+router.register(r'users', UserViewSet, base_name="users")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
