@@ -82,7 +82,7 @@ class Goods(models.Model):
         verbose_name_plural = verbose_name
 
     def _str__(self):
-        return self.name
+        return self.goods.name
 
 
 class IndexAd(models.Model):

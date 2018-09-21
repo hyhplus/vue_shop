@@ -20,11 +20,12 @@ class UserFav(models.Model):
     class Meta:
         verbose_name = "用户收藏"
         verbose_name_plural = verbose_name
+        # 多个字段作为一个联合唯一索引
         unique_together = ("user", "goods")
 
     def __str__(self):
         #return self.user.username
-        return self.user.name
+        return self.user.username
 
 
 class UserLeavingMessage(models.Model):

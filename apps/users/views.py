@@ -3,13 +3,17 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from rest_framework import viewsets, status
+from rest_framework import mixins
+from rest_framework import permissions
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework_jwt.serializers import jwt_payload_handler, jwt_encode_handler
 from random import choice
 
 from users.models import VerifyCode
-from users.serializers import SmsSerializer, UserRegSerializer
+from users.serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from utils.yunpian import YunPian
 from MyShop.settings import API_KEY
 
@@ -20,6 +24,7 @@ class CustomBackend(ModelBackend):
     """
     自定义用户验证规则
     """
+
     def authenticate(self, username=None, password=None, **kwargs):
         try:
             # 不希望用户存在两个， get只能有一个
@@ -38,12 +43,14 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
     """
     发送短信验证码
     """
+
     serializer_class = SmsSerializer
 
     def generate_code(self):
         """
         生成四位数字的验证码
         """
+
         seeds = "1234567890"
         random_str = []
         for i in range(4):
@@ -54,6 +61,7 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         """
         重写CreateModelMixin的create方法
         """
+
         # serializer这两个配置直接使用CreateModelMixin的create()的
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -77,12 +85,32 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
             }, status = status.HTTP_201_CREATED)
 
 
-class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
+class UserViewSet(CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     用户
     """
+
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
+
+    # 登录验证
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+    # 设置动态序列化
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return UserDetailSerializer
+        elif self.action == "create":
+            return UserRegSerializer
+        return UserDetailSerializer
+
+    # 设置动态权限配置, 用户注册无需判断登录状态
+    def get_permissions(self):
+        if self.action == "retrieve":
+            return [permissions.IsAuthenticated()]
+        elif self.action == "create":
+            return []
+        return []
 
     def create(self, request, *args, **kwargs):
         # 重写CreateModelMixin的create()方法
@@ -99,6 +127,7 @@ class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
+    # 用于返回当前用户
     def get_object(self):
         return self.request.user
 

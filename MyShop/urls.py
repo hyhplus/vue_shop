@@ -28,6 +28,7 @@ from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from users.views import SmsCodeViewSet
 from users.views import UserViewSet
+from user_operation.views import UserFavViewSet
 
 router = DefaultRouter()
 
@@ -40,6 +41,9 @@ router.register(r'code', SmsCodeViewSet, base_name="code")
 
 # 配置用户登录路由
 router.register(r'users', UserViewSet, base_name="users")
+
+# 配置用户收藏的路由
+router.register(r'userfavs', UserFavViewSet, base_name="userfavs")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,

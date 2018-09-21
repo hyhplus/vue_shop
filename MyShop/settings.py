@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# 加密解密的密钥
 SECRET_KEY = '$$85r#ri^2fpp)&=ro^rx^3(lg6i^*f5fa+7jiam3(5y8db36)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -171,7 +172,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #jwt的认证方式
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #jwt的认证方式
     )
 }
 
