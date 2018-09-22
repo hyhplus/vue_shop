@@ -85,7 +85,7 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
             }, status = status.HTTP_201_CREATED)
 
 
-class UserViewSet(CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewSet(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     用户
     """

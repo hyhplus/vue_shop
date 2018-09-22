@@ -28,14 +28,17 @@ from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from users.views import SmsCodeViewSet
 from users.views import UserViewSet
-from user_operation.views import UserFavViewSet
+from user_operation.views import UserFavViewSet, LeavingMessageViewSet
+from user_operation.views import AddressViewSet
 
 router = DefaultRouter()
 
 # 配置商品列表的路由
 router.register(r'goods', GoodsAllViewSet, base_name="goods")
+
 # 配置商品分类的路由
 router.register(r'category', CategoryViewSet, base_name="category")
+
 # 配置验证码的路由
 router.register(r'code', SmsCodeViewSet, base_name="code")
 
@@ -44,6 +47,12 @@ router.register(r'users', UserViewSet, base_name="users")
 
 # 配置用户收藏的路由
 router.register(r'userfavs', UserFavViewSet, base_name="userfavs")
+
+# 配置留言的路由
+router.register(r'messages', LeavingMessageViewSet, base_name="messages")
+
+# 配置收货地址的路由
+router.register(r'address', AddressViewSet, base_name="address")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
