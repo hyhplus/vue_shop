@@ -1,9 +1,11 @@
 # coding: utf-8
 __author__ = 'Evan'
 
+import re
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from MyShop.settings import REGEX_MOBILE
 from user_operation.models import UserFav, UserLeavingMessage, UserAddress
 from goods.serializers import GoodsSerializer
 
@@ -64,6 +66,17 @@ class AddressSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault
     )
     add_time = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
+
+    def validated_mobile(self, signer_mobile):
+        if not re.match(REGEX_MOBILE, signer_mobile):
+            raise serializers.ValidationError("手机号非法")
+
+        return signer_mobile
+
+    # def validate_empty_values(self, signer_name):
+    #     if signer_name == None:
+    #         raise serializers.ValidationError("收件人非空")
+    #     return signer_name
 
     class Meta:
         model = UserAddress

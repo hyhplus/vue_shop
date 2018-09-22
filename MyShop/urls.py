@@ -26,6 +26,8 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
+from trade.views import ShoppingCartViewSet
+from trade.views import OrderViewSet
 from users.views import SmsCodeViewSet
 from users.views import UserViewSet
 from user_operation.views import UserFavViewSet, LeavingMessageViewSet
@@ -54,6 +56,12 @@ router.register(r'messages', LeavingMessageViewSet, base_name="messages")
 # 配置收货地址的路由
 router.register(r'address', AddressViewSet, base_name="address")
 
+# 配置购物车的路由
+router.register(r'shopcarts', ShoppingCartViewSet, base_name="shopcarts")
+
+# 配置订单相关的路由
+router.register(r'orders', OrderViewSet, base_name="orders")
+
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
 # })
@@ -61,26 +69,28 @@ router.register(r'address', AddressViewSet, base_name="address")
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
+
+    # 富文本框编辑, 用于xadmin/下 商品详情的编辑, 可以编辑图片
     path('ueditor/', include('DjangoUeditor.urls')),
-    # drf 后台登录
+
+    # DRF 后台登录 API 接口
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # 处理图片显示的url,使用Django自带serve,
     # 传入参数告诉它去哪个路径找，我们有配置好的路径MEDIAROOT
     url(r'media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
-
     # # 商品列表页
     # path('goods/', goods_list.as_view(), name="goods-list"),
 
     url(r'^', include(router.urls)),
 
-    # DRF自动文档
-    url(r'docs/', include_docs_urls(title="drf电商系统")),
+    # DRF自动文档, 方便前后端交互的文档
+    url(r'docs/', include_docs_urls(title="DRF SHOP DOCS")),
 
-    # 登录注册验证
+    # 登录注册验证, 生成token值
     url(r'^api-token-auth/', token_views.obtain_auth_token),
 
-    # jwt的token认证
+    # jwt的token认证, 验证jwt的token是否匹配
     url(r'^login/', obtain_jwt_token),
 ]
