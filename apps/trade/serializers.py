@@ -8,6 +8,7 @@ from goods.models import Goods
 from goods.serializers import GoodsSerializer
 from trade.models import ShoppingCart, OrderInfo, OrderGoods
 
+
 class ShopCartDetailSerializer(serializers.ModelSerializer):
     goods = GoodsSerializer(many=False)
     class Meta:

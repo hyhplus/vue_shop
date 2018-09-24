@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-User = get_user_model()
 
 from goods.models import Goods
 from datetime import datetime
 
+User = get_user_model()
+
+
 # Create your models here.
-
-
 class ShoppingCart(models.Model):
     """
     购物车

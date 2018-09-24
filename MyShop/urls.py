@@ -28,6 +28,7 @@ from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from trade.views import ShoppingCartViewSet
 from trade.views import OrderViewSet
+from trade.views import AliPayView
 from users.views import SmsCodeViewSet
 from users.views import UserViewSet
 from user_operation.views import UserFavViewSet, LeavingMessageViewSet
@@ -88,9 +89,11 @@ urlpatterns = [
     # DRF自动文档, 方便前后端交互的文档
     url(r'docs/', include_docs_urls(title="DRF SHOP DOCS")),
 
-    # 登录注册验证, 生成token值
+    # drf自带的登录注册验证, 生成token值
     url(r'^api-token-auth/', token_views.obtain_auth_token),
 
     # jwt的token认证, 验证jwt的token是否匹配
     url(r'^login/', obtain_jwt_token),
+
+    url(r'alipay/return/', AliPayView.as_view(), name="alipay"),
 ]
