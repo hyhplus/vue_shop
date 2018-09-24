@@ -83,7 +83,7 @@ urlpatterns = [
 
     # # 商品列表页
     # path('goods/', goods_list.as_view(), name="goods-list"),
-
+    # 全局url的配置
     url(r'^', include(router.urls)),
 
     # DRF自动文档, 方便前后端交互的文档
@@ -95,5 +95,6 @@ urlpatterns = [
     # jwt的token认证, 验证jwt的token是否匹配
     url(r'^login/', obtain_jwt_token),
 
+    # 支付宝返回接口
     url(r'alipay/return/', AliPayView.as_view(), name="alipay"),
 ]

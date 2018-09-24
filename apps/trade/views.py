@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from MyShop.settings import private_key_path, ali_pub_key_path
 from utils.alipay import AliPay
 from utils.permissions import IsOwnerOrReadOnly
 from trade.serializers import ShoppingCartSerializer
@@ -99,8 +100,8 @@ class AliPayView(APIView):
         alipay = AliPay(
             appid="201608060018695",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
-            app_private_key_path="../trade/keys/private_2048.txt",
-            alipay_public_key_path="../trade/keys/alipay_key_2048.txt",  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            app_private_key_path=private_key_path,
+            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
             debug=True,  # 默认False,
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
@@ -134,8 +135,8 @@ class AliPayView(APIView):
         alipay = AliPay(
             appid="201608060018695",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
-            app_private_key_path="../trade/keys/private_2048.txt",
-            alipay_public_key_path="../trade/keys/alipay_key_2048.txt",  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            app_private_key_path=private_key_path,
+            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
             debug=True,  # 默认False,
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
