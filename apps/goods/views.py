@@ -8,8 +8,8 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 from rest_framework.authentication import TokenAuthentication
 
 from goods.filters import GoodsFilter
-from goods.serializers import GoodsSerializer, CategorySerializer
-from goods.models import Goods
+from goods.serializers import GoodsSerializer, CategorySerializer, BannerSerializer
+from goods.models import Goods, Banner
 from goods.models import GoodsCategory
 
 
@@ -40,9 +40,8 @@ pip install django-guardian
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GoodsPagination(PageNumberPagination):
-    """
-    商品列表分页
-    """
+    """ 商品列表分页 """
+
     page_size = 12
     page_size_query_param = 'page_size'
     page_query_param = 'page'
@@ -53,6 +52,7 @@ class GoodsListView(generics.ListAPIView):
     """
     商品列表页 ListAPIView  -->  test
     """
+
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
@@ -66,6 +66,7 @@ class GoodsAllViewSet(mixins.ListModelMixin,
     商品列表 ViewSet
     包括了分页，搜索，过滤，排序
     """
+
     '''
     # queryset = Goods.objects.all() 不设置排序会报下面的错误:
     UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'goods.models.Goods'> QuerySet
@@ -97,9 +98,14 @@ class GoodsAllViewSet(mixins.ListModelMixin,
 class CategoryViewSet(mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
-    """
-    list:
-        商品分类列表数据
-    """
+    """ list:   商品分类列表数据 """
+
     queryset = GoodsCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializer
+
+
+class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """ list:  获取轮播图列表 """
+
+    queryset = Banner.objects.all().order_by("index")
+    serializer_class = BannerSerializer
