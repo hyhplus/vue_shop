@@ -50,7 +50,6 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         """
         生成四位数字的验证码
         """
-
         seeds = "1234567890"
         random_str = []
         for i in range(4):
@@ -61,7 +60,6 @@ class SmsCodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
         """
         重写CreateModelMixin的create方法
         """
-
         # serializer这两个配置直接使用CreateModelMixin的create()的
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

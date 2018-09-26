@@ -23,9 +23,7 @@ class UserFavViewSet(viewsets.GenericViewSet,
     """
     # queryset = UserFav.objects.all()
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-
     # serializer_class = UserFavSerializer
-
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
 
     lookup_field = "goods_id"

@@ -27,6 +27,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from goods.views import BannerViewSet
+from goods.views import IndexCategoryViewSet
 from trade.views import ShoppingCartViewSet
 from trade.views import OrderViewSet
 from trade.views import AliPayView
@@ -66,6 +67,9 @@ router.register(r'orders', OrderViewSet, base_name="orders")
 
 # 配置轮播图的路由
 router.register(r'banners', BannerViewSet, base_name="banners")
+
+# 配置首页商品类别的路由
+router.register(r'indexgoods', IndexCategoryViewSet, base_name="indexgoods")
 
 # goods_list = GoodsListViewSet.as_view({
 #     'get': list,
