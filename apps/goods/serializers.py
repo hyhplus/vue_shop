@@ -28,13 +28,13 @@ goods的外键category --> 直接嵌套展示category表中的字段
 class CategorySerializer3(serializers.ModelSerializer):
     class Meta:
         model = GoodsCategory
-        fields = '__all__'
+        fields = "__all__"
 
 class CategorySerializer2(serializers.ModelSerializer):
     sub_cat = CategorySerializer3(many=True)
     class Meta:
         model = GoodsCategory
-        fields = '__all__'
+        fields = "__all__"
 
 class CategorySerializer(serializers.ModelSerializer):
     """
@@ -43,7 +43,7 @@ class CategorySerializer(serializers.ModelSerializer):
     sub_cat = CategorySerializer2(many=True)
     class Meta:
         model = GoodsCategory
-        fields = '__all__'
+        fields = "__all__"
 
 
 class GoodsImageSerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class GoodsSerializer(serializers.ModelSerializer):
     images = GoodsImageSerializer(many=True)
     class Meta:
         model = Goods
-        fields = '__all__'
+        fields = "__all__"
 
 
 class BannerSerializer(serializers.ModelSerializer):

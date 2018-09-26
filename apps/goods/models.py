@@ -22,8 +22,8 @@ class GoodsCategory(models.Model):
 
     # 设置目录树的级别
     category_type = models.IntegerField(choices=CATEGORY_TYPE, verbose_name="类目级别", help_text="类目级别")
-    parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",
-                                        related_name="sub_cat", on_delete=models.CASCADE)
+    parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别",
+                                        help_text="父目录", related_name="sub_cat", on_delete=models.CASCADE)
     is_tab = models.BooleanField(default=False, verbose_name="是否导航", help_text="是否导航")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
@@ -81,8 +81,8 @@ class Goods(models.Model):
         verbose_name = "商品"
         verbose_name_plural = verbose_name
 
-    def _str__(self):
-        return self.goods.name
+    def __str__(self):
+        return self.name
 
 
 class IndexAd(models.Model):

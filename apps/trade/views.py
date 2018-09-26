@@ -30,6 +30,30 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingCartSerializer
     lookup_field = "goods_id"
 
+    def perform_create(self, serializer):
+        """商品加入购物车，库存相应减少"""
+        shop_cart = serializer.save()
+        goods = shop_cart.goods
+        goods.goods_num -= shop_cart.nums
+        goods.save()
+
+    def perform_destroy(self, instance):
+        """商品移除购物车，库存增加"""
+        goods = instance.goods
+        goods.goods_num += instance.nums
+        goods.save()
+        instance.delete()
+
+    def perform_update(self, serializer):
+        """修改购物车商品数量，影响相应的商品库存量"""
+        existed_record = ShoppingCart.objects.get(id=serializer.instance.id)
+        existed_nums = existed_record.nums
+        saved_record = serializer.save()
+        nums = saved_record.nums - existed_nums
+        goods = saved_record.goods
+        goods.goods_num -= nums
+        goods.save()
+
     def get_serializer_class(self):
         if self.action == "list":
             return ShopCartDetailSerializer
@@ -101,8 +125,10 @@ class AliPayView(APIView):
             appid="201608060018695",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
             app_private_key_path=private_key_path,
-            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            debug=True,  # 默认False,
+
+            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
+            alipay_public_key_path=ali_pub_key_path,
+            debug=True,     # 默认False
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
 
@@ -136,8 +162,10 @@ class AliPayView(APIView):
             appid="201608060018695",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
             app_private_key_path=private_key_path,
-            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            debug=True,  # 默认False,
+
+            # 支付宝的公钥，验证支付宝回传消息使用
+            alipay_public_key_path=ali_pub_key_path,
+            debug=True,     # 默认False
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
 
@@ -149,7 +177,17 @@ class AliPayView(APIView):
             trade_status = processed_dict.get('trade_status', None)
 
             existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
+
             for existed_order in existed_orders:
+
+                order_goods = existed_order.goods.all()
+                for order_good in order_goods:
+                    goods = order_good.goods
+
+                    # 销售量的统计
+                    goods.sold_num += order_good.goods_num
+                    goods.save()
+
                 existed_order.pay_status = trade_status
                 existed_order.trade_no = trade_no
                 existed_order.pay_time = datetime.now()

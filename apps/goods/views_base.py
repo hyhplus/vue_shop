@@ -30,5 +30,6 @@ class GoodsListView(View):
         json_data = serializers.serialize('json', goods)
         json_data = json.loads(json_data)
 
-        # return HttpResponse(json.dumps(json_data), content_type="application/json")
+        # return HttpResponse(json.dumps(json_data),
+        # content_type="application/json")
         return JsonResponse(json_data, safe=False)

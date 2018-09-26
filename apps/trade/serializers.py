@@ -30,7 +30,8 @@ class ShoppingCartSerializer(serializers.Serializer):
                                         "required": "请选择购买数量"
                                     })
 
-    goods = serializers.PrimaryKeyRelatedField(required=True, queryset=Goods.objects.all())
+    goods = serializers.PrimaryKeyRelatedField(required=True,
+                                               queryset=Goods.objects.all())
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -71,7 +72,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             appid="",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
             app_private_key_path=private_key_path,
-            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+
+            # 支付宝的公钥，验证支付宝回传消息使用
+            alipay_public_key_path=ali_pub_key_path,
             debug=True,  # 默认False,
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
@@ -108,8 +111,10 @@ class OrderSerializer(serializers.ModelSerializer):
             appid="",
             app_notify_url="http://127.0.0.1:8000/alipay/return/",
             app_private_key_path=private_key_path,
-            alipay_public_key_path=ali_pub_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
-            debug=True,  # 默认False,
+
+            # 支付宝的公钥，验证支付宝回传消息使用
+            alipay_public_key_path=ali_pub_key_path,
+            debug=True,  # 默认False
             return_url="http://127.0.0.1:8000/alipay/return/"
         )
 

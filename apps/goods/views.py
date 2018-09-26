@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework import generics, filters
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.authentication import TokenAuthentication
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 from goods.filters import GoodsFilter
 from goods.serializers import GoodsSerializer, CategorySerializer
@@ -24,17 +26,19 @@ pip install coreapi
 pip install django-guardian
 """
 
-# class GoodsListView(APIView):
-#     """
-#     商品列表页
-#     """
-#     def get(self, request, format=None):
-#         goods = Goods.objects.all()[:10]
-#         goods_serializer = GoodsSerializer(goods, many=True)
-#         return Response(goods_serializer.data)
+    # class GoodsListView(APIView):
+    #     """
+    #     商品列表页
+    #     """
+    #     def get(self, request, format=None):
+    #         goods = Goods.objects.all()[:10]
+    #         goods_serializer = GoodsSerializer(goods, many=True)
+    #         return Response(goods_serializer.data)
 
     # def post(self, request, format=None):
-    #     serializer = GoodsSerializer(data=request.data) # drf封装get/post/body的请求的数据
+    #     # drf封装get/post/body的请求的数据
+    #     serializer = GoodsSerializer(data=request.data)
+    #
     #     if serializer.is_valid():
     #         serializer.save()
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -62,7 +66,8 @@ class GoodsListView(generics.ListAPIView):
 
 
 from rest_framework import mixins, viewsets
-class GoodsAllViewSet(mixins.ListModelMixin,
+class GoodsAllViewSet(CacheResponseMixin,
+                      mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
     """
@@ -76,6 +81,7 @@ class GoodsAllViewSet(mixins.ListModelMixin,
     with an unordered object_list: <class 'goods.models.Goods'> QuerySet.
     '''
     # queryset = Goods.objects.get_queryset().order_by('id')
+    throttle_classes = (AnonRateThrottle, UserRateThrottle)
     queryset = Goods.objects.all().order_by('id')
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
@@ -83,7 +89,9 @@ class GoodsAllViewSet(mixins.ListModelMixin,
     # drf的token认证机制
     # authentication_classes = (TokenAuthentication,)
 
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_backends = (DjangoFilterBackend,
+                       filters.SearchFilter,
+                       filters.OrderingFilter)
     filter_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('sold_num', 'shop_price')
@@ -120,7 +128,7 @@ class CategoryViewSet(mixins.ListModelMixin,
     serializer_class = CategorySerializer
 
 
-class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class BannerViewSet(CacheResponseMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     list:   获取轮播图列表
     """
@@ -129,9 +137,11 @@ class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = BannerSerializer
 
 
-class IndexCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class IndexCategoryViewSet(CacheResponseMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     list:   首页商品系列数据
     """
-    queryset = GoodsCategory.objects.filter(is_tab=True, name__in=["生鲜食品","酒水饮料","牛奶制品","海鲜水产"])
+    queryset = GoodsCategory.objects.filter(is_tab=True,
+                                            name__in=["生鲜食品","酒水饮料",
+                                                      "牛奶制品","海鲜水产"])
     serializer_class = IndexCategorySerializer
