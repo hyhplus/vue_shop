@@ -1,6 +1,7 @@
 # coding: utf-8
 __author__ = 'Evan'
 
+from django.shortcuts import render
 from django.views.generic.base import View
 from goods.models import Goods
 
@@ -33,3 +34,7 @@ class GoodsListView(View):
         # return HttpResponse(json.dumps(json_data),
         # content_type="application/json")
         return JsonResponse(json_data, safe=False)
+
+
+def webViews(request):
+    return render(request, 'index.html')

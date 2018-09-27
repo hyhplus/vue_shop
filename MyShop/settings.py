@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'corsheaders',              # 设置服务器跨域的配置
     'rest_framework.authtoken', # 登录认证
 
+    'social_django',            # social_django集成第三方登录, pip install social-auth-app-django
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,8 @@ CORS_ORIGIN_WHITELIST = (
 
 ROOT_URLCONF = 'MyShop.urls'
 
+# SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -90,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -181,20 +186,26 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '5/minutes',
-        'user': '12/minutes'
+        'anon': '150/minutes',
+        'user': '1000/minutes'
     },
 }
 
 # 设置用户名，邮箱和手机号码均可以登录系统
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
+
+    # social-django集成第三方登录
+    'social_core.backends.weibo.WeiboOAuth2',
+    'social_core.backends.weixin.WeixinOAuth2',
+    'social_core.backends.qq.QQOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 # jwt相关的设置
 import datetime
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7), # jwt过期时间
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1), # jwt过期时间
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
@@ -210,7 +221,7 @@ ali_pub_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/alipay_key_2048.txt')
 
 # 设置drf-extensions缓存的过期时间
 REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 5
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 3600 * 24
 }
 
 # 配置redis缓存
@@ -223,3 +234,15 @@ CACHES = {
         }
     }
 }
+
+# 第三方登录相关
+SOCIAL_AUTH_WEIBO_KEY = '22741383'
+SOCIAL_AUTH_WEIBO_SECRET = 'a5c5c5ffa790f690b399348cc1f0891e'
+
+SOCIAL_AUTH_QQ_KEY = 'foobar'
+SOCIAL_AUTH_QQ_SECRET = 'bazqux'
+
+SOCIAL_AUTH_WEIXIN_KEY = 'foobar'
+SOCIAL_AUTH_WEIXIN_SECRET = 'bazqux'
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'

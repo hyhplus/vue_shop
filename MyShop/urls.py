@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 # from django.contrib import admin
+
 import xadmin
 from django.urls import path
 from django.conf.urls import include, url
 from django.views.static import serve
+from django.views.generic import TemplateView
 from MyShop.settings import MEDIA_ROOT
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
@@ -28,6 +30,7 @@ from goods.views import GoodsAllViewSet
 from goods.views import CategoryViewSet
 from goods.views import BannerViewSet
 from goods.views import IndexCategoryViewSet
+from goods.views_base import webViews
 from trade.views import ShoppingCartViewSet
 from trade.views import OrderViewSet
 from trade.views import AliPayView
@@ -101,8 +104,15 @@ urlpatterns = [
     url(r'^api-token-auth/', token_views.obtain_auth_token),
 
     # jwt的token认证, 验证jwt的token是否匹配
-    url(r'^login/', obtain_jwt_token),
+    url(r'^login/$', obtain_jwt_token),
 
     # 支付宝返回接口
     url(r'alipay/return/', AliPayView.as_view(), name="alipay"),
+
+    # 第三方登录接口url
+    url(r'', include('social_django.urls', namespace='social')),
+
+    # 匹配前端接口
+    url(r'^web/', webViews),
+    url(r'^index/', TemplateView.as_view(template_name="index.html"), name="index"),
 ]
